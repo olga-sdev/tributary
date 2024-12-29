@@ -10,9 +10,19 @@ app = Flask(__name__)
 HISTORY_LENGTH = 10
 DATA_KEY = "engine_temperature"
 
-# define an endpoint which accepts POST requests, and is reachable from the /record endpoint
+#
 @app.route('/record', methods=['POST'])
 def record_engine_temperature():
+    '''
+    Endpoint accepts POST requests, and is reachable from the /record endpoint
+
+    get_json() -> extracts the JSON payload from the request
+    redis.Redis() -> open up a connection to the Redis database, which is running in a different container
+    database.lpush -> storing engine temperature readings in a Redis list,
+    database.rpop -> keeping track of the 10 most recent values, and discarding old ones as new ones appear
+
+    :return: {"success": True}, 200
+    '''
     payload = request.get_json(force=True)
     logger.info(f"(*) record request --- {json.dumps(payload)} (*)")
 
@@ -32,7 +42,6 @@ def record_engine_temperature():
     return {"success": True}, 200
 
 
-# practically identical to the above
 @app.route('/collect', methods=['POST'])
 def collect_engine_temperature():
     return {"success": True}, 200
