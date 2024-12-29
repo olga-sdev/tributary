@@ -4,13 +4,13 @@ from flask import Flask, request
 from loguru import logger
 
 
-# create a Flask server, and allow us to interact with it using the app variable
-app = Flask(__name__)
-
 HISTORY_LENGTH = 10
 DATA_KEY = "engine_temperature"
 
-#
+# create a Flask server, and allow us to interact with it using the app variable
+app = Flask(__name__)
+
+
 @app.route('/record', methods=['POST'])
 def record_engine_temperature():
     '''
