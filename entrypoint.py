@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/record', methods=['POST'])
 def record_engine_temperature():
-    '''
+    """
     Endpoint accepts POST requests, and is reachable from the /record endpoint
 
     get_json() -> extracts the JSON payload from the request
@@ -22,7 +22,7 @@ def record_engine_temperature():
     database.rpop -> keeping track of the 10 most recent values, and discarding old ones as new ones appear
 
     :return: {"success": True}, 200
-    '''
+    """
     payload = request.get_json(force=True)
     logger.info(f"(*) record request --- {json.dumps(payload)} (*)")
 
@@ -44,7 +44,7 @@ def record_engine_temperature():
 
 @app.route('/collect', methods=['POST'])
 def collect_engine_temperature():
-    '''
+    """
     Collect temperature data from engine
 
     redis.Redis -> connect to Redis DB
@@ -52,7 +52,7 @@ def collect_engine_temperature():
     calculate average_engine_temperature and get the current temperature
 
     :return: current_engine_temperature and average_engine_temperature, success status code 200
-    '''
+    """
     database = redis.Redis(host="redis", port=6379, db=0, decode_responses=True)
     engine_temperature_values = database.lrange(DATA_KEY, 0, -1)
     logger.info(f"engine temperature list contains values: {engine_temperature_values}")
@@ -68,4 +68,3 @@ def collect_engine_temperature():
 
     logger.info(f"collect request successful")
     return result, 200
-
